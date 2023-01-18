@@ -11,7 +11,22 @@ async function getALlTask() {
   return rows;
 }
 
+async function createTask({ title, description }) {
+  try {
+    const result = await client.query(
+      `
+      INSERT INTO task(title, description)  
+      VALUES($1, $2)
+    `,[title, description]
+    );
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   client,
   getALlTask,
+  createTask, 
 };

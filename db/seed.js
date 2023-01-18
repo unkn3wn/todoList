@@ -1,4 +1,4 @@
-const { client, getALlTask } = require("./index");
+const { client, getALlTask, createTask } = require("./index");
 
 async function dropTables() {
   try {
@@ -31,13 +31,32 @@ async function createTables() {
   }
 }
 
+// create task funcion
+async function createInitialTask() {
+  try {
+    console.log("Start of making Task....");
+    const homework = await createTask({
+      title: "homework",
+      description: "lots of it",
+    });
+
+    console.log(homework);
+    console.log("finished creating task");
+  } catch (error) {
+    console.error("error creating task");
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     client.connect();
     await dropTables();
     await createTables();
+    await createInitialTask();
   } catch (error) {
     console.error(error);
+    throw error;
   }
 }
 
