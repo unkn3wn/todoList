@@ -1,21 +1,20 @@
 {
   "name": "todolist",
   "version": "1.0.0",
-  "description": "todolist",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon src/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unkn3wn/todoList.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "morgan": "^1.10.0"
+  "bugs": {
+    "url": "https://github.com/unkn3wn/todoList/issues"
   },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  }
+  "homepage": "https://github.com/unkn3wn/todoList#readme"
 }
