@@ -1,4 +1,4 @@
-const { client, getALlTask, createTask } = require("./index");
+const { client, getAllTask, getSingleTask, createTask } = require("./index");
 
 async function dropTables() {
   try {
@@ -30,7 +30,6 @@ async function createTables() {
     throw error;
   }
 }
-
 // create task funcion
 async function createInitialTask() {
   try {
@@ -39,14 +38,23 @@ async function createInitialTask() {
       title: "homework",
       description: "lots of it",
     });
+    const secondHomework = await createTask({
+      title: "moreHomework",
+      description: "more and more",
+    });
+    const thirdHomework = await createTask({
+      title: "moremoreHome",
+      description: "more and more and more",
+    });
 
-    console.log(homework);
+    console.log(homework, secondHomework, thirdHomework);
     console.log("finished creating task");
   } catch (error) {
     console.error("error creating task");
     throw error;
   }
 }
+
 
 async function rebuildDB() {
   try {
@@ -63,8 +71,13 @@ async function rebuildDB() {
 async function testDB() {
   try {
     console.log("start of testing db");
-    const task = await getALlTask();
+    const task = await getAllTask();
     console.log("task: ", task);
+
+    // console.log("start of getting single task");
+    // const taskOne = await getSingleTask(1);
+    // console.log("Result: ", taskOne);
+
     console.log("finished db test!");
   } catch (error) {
     console.error("Error testing database!");
