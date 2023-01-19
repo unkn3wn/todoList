@@ -1,7 +1,6 @@
 const { Client } = require("pg");
 
 const client = new Client("postgres://unknown:1207@localhost:5432/task-dev");
-
 async function getAllTask() {
   try {
     const { rows } = await client.query(
@@ -14,7 +13,6 @@ async function getAllTask() {
     throw error;
   }
 }
-
 async function getSingleTask(taskId) {
   try {
     const {
