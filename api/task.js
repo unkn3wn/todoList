@@ -1,11 +1,11 @@
 const express = require('express')
-const taskRouter = express.Router();
+const tasksRouter = express.Router();
 
 
-taskRouter((req, res, next)=>{
+tasksRouter.use((req, res, next)=>{
     console.log("requst to /task");
 
     res.send({message:"hey"})
 });
 
-module.exports = taskRouter;
+module.exports = tasksRouter;
