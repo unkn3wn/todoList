@@ -1,4 +1,10 @@
-const { client, getAllTask, createTask, updateTask } = require("./index");
+const {
+  client,
+  getAllTask,
+  createTask,
+  updateTask,
+  deleteTask,
+} = require("./index");
 
 async function dropTables() {
   try {
@@ -78,6 +84,10 @@ async function testDB() {
       description: "reyes",
     });
     console.log("result", updateTaskResult);
+
+    console.log("start of deleting a task");
+    const destroyTask = await deleteTask([1]);
+    console.log("result:", destroyTask);
 
     console.log("finished db test!");
   } catch (error) {

@@ -16,22 +16,21 @@ async function getAllTask() {
 }
 
 async function getSingleTask(taskId) {
-  try{
-    const{
+  try {
+    const {
       rows: [task],
     } = await client.query(
       `SELECT * FROM tasks 
         WHERE tasks.id = ${taskId}`
-    )
-    if(!task){
+    );
+    if (!task) {
       return null;
     }
 
     return task;
-  }catch(error){
+  } catch (error) {
     throw error;
   }
-
 }
 
 async function createTask({ title, description }) {
@@ -71,20 +70,19 @@ async function updateTask(taskId, fields = {}) {
   }
 }
 
-async function deleteTask({ id }) {
+const deleteTask = async (taskId) => {
   try {
-    const result = await client.query(
+    const { rows } = await client.query(
+      `DELETE FROM tasks
+        WHERE tasks.id = ${taskId}
+          RETURNING *
       `
-      DELETE FROM tasks WHERE id=$1
-    `,
-      [id]
     );
-    return result;
+    return rows;
   } catch (error) {
-    console.error(error);
     throw error;
   }
-}
+};
 
 module.exports = {
   client,
