@@ -15,18 +15,23 @@ async function getAllTask() {
   }
 }
 
-async function getSingleTask() {
-  try {
-    const { id } = await client.query(
-      `
-      SELECT * FROM tasks WHERE id=$1
-    `,
-      [id]
-    );
-  } catch (error) {
-    console.error("task does not exist");
+async function getSingleTask(taskId) {
+  try{
+    const{
+      rows: [task],
+    } = await client.query(
+      `SELECT * FROM tasks 
+        WHERE tasks.id = ${taskId}`
+    )
+    if(!task){
+      return null;
+    }
+
+    return task;
+  }catch(error){
     throw error;
   }
+
 }
 
 async function createTask({ title, description }) {
@@ -44,20 +49,25 @@ async function createTask({ title, description }) {
   }
 }
 
-async function updateTask({title, description}) {
+async function updateTask(taskId, fields = {}) {
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(",");
+  if (setString.length === 0) {
+    return;
+  }
   try {
-
     const result = await client.query(
-      `UPDATE tasks SET title = $1, description = $2 RETURNING *`,
-      [title, description]
+      `UPDATE tasks
+          SET ${setString}
+          WHERE tasks.id = ${taskId}
+          RETURNING *
+        `,
+      Object.values(fields)
     );
-
-    if (result.rows.length === 0)
-      return res.status(404).json({ message: "Task not found" });
-
-    return result;
+    return getSingleTask(taskId);
   } catch (error) {
-    throw(error);
+    throw error;
   }
 }
 
@@ -69,7 +79,7 @@ async function deleteTask({ id }) {
     `,
       [id]
     );
-    return result ;
+    return result;
   } catch (error) {
     console.error(error);
     throw error;
