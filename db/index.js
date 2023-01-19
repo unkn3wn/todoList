@@ -5,7 +5,7 @@ const client = new Client("postgres://unknown:1207@localhost:5432/task-dev");
 async function getAllTask() {
   try {
     const { rows } = await client.query(
-      `SELECT * FROM task
+      `SELECT * FROM tasks
     `
     );
     return rows;
@@ -19,7 +19,7 @@ async function getSingleTask() {
   try {
     const { id } = await client.query(
       `
-      SELECT * FROM task WHERE id=$1
+      SELECT * FROM tasks WHERE id=$1
     `,
       [id]
     );
@@ -33,7 +33,7 @@ async function createTask({ title, description }) {
   try {
     const result = await client.query(
       `
-      INSERT INTO task(title, description)  
+      INSERT INTO tasks(title, description)  
       VALUES($1, $2)
     `,
       [title, description]
@@ -44,19 +44,20 @@ async function createTask({ title, description }) {
   }
 }
 
-async function updateTask({ title, description }) {
+async function updateTask({title, description}) {
   try {
-    const { id } = req.params;
+
     const result = await client.query(
-      `
-      UPDATE task SET title = $1, description = $2 WHERE id = $3 RETURNING *
-    `,
-      [title, description, id]
+      `UPDATE tasks SET title = $1, description = $2 RETURNING *`,
+      [title, description]
     );
+
+    if (result.rows.length === 0)
+      return res.status(404).json({ message: "Task not found" });
+
     return result;
   } catch (error) {
-    console.error(error);
-    throw error;
+    throw(error);
   }
 }
 
@@ -64,10 +65,11 @@ async function deleteTask({ id }) {
   try {
     const result = await client.query(
       `
-      DELETE FROM task WHERE id=$1
+      DELETE FROM tasks WHERE id=$1
     `,
       [id]
     );
+    return result ;
   } catch (error) {
     console.error(error);
     throw error;
@@ -80,4 +82,5 @@ module.exports = {
   getSingleTask,
   createTask,
   updateTask,
+  deleteTask,
 };

@@ -1,10 +1,10 @@
-const { client, getAllTask, getSingleTask, createTask } = require("./index");
+const { client, getAllTask, createTask, updateTask } = require("./index");
 
 async function dropTables() {
   try {
     console.log("start of dropping tables...");
     await client.query(`
-        DROP TABLE IF EXISTS task
+        DROP TABLE IF EXISTS tasks
         `);
     console.log("done dropping tables");
   } catch (error) {
@@ -17,7 +17,7 @@ async function createTables() {
   try {
     console.log("start of building tables");
     await client.query(`
-    CREATE TABLE task(
+    CREATE TABLE tasks(
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) UNIQUE,
         description VARCHAR(255)
@@ -54,8 +54,6 @@ async function createInitialTask() {
     throw error;
   }
 }
-
-
 async function rebuildDB() {
   try {
     client.connect();
@@ -74,9 +72,12 @@ async function testDB() {
     const task = await getAllTask();
     console.log("task: ", task);
 
-    // console.log("start of getting single task");
-    // const taskOne = await getSingleTask(1);
-    // console.log("Result: ", taskOne);
+    console.log("updating tasks on task [0]");
+    const updateTaskResult = await updateTask([1], {
+      title: "fernando",
+      description: "reyes",
+    });
+    console.log("result", updateTaskResult);
 
     console.log("finished db test!");
   } catch (error) {
