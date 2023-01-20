@@ -29,7 +29,8 @@ export default function AllTask() {
             <h3>{ta.title}</h3>
             <h4>{ta.description}</h4>
             <button
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
                 nav(`/tasks/${ta.id}`);
               }}
             >

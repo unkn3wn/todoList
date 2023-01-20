@@ -14,12 +14,20 @@ export default function SingleTask() {
       setDetail(result);
     }
     loadTask();
-  });
+  }, []);
 
   return (
     <div>
       <h3>TITLE:{detail.title}</h3>
       <h3>DESCRIPTION:{detail.description}</h3>
+      <button
+        onClick={() => {
+          deleteTask(taskId);
+          nav("/");
+        }}
+      >
+        DELETE
+      </button>
     </div>
   );
 }
