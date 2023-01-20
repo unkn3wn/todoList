@@ -35,7 +35,7 @@ taskRouter.post("/tasks/create", async (req, res, next) => {
   }
 });
 
-taskRouter.patch("/tasks/:taskId", async (req, res, next) => {
+taskRouter.patch("/tasks/updating/:taskId", async (req, res, next) => {
   const { taskId } = req.params;
   const { title, description } = req.body;
   const updateFields = {};

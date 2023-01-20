@@ -28,6 +28,13 @@ export default function SingleTask() {
       >
         DELETE
       </button>
+      <button
+        onClick={() => {
+          nav(`/tasks/updating/${taskId}`);
+        }}
+      >
+        UPDATe
+      </button>
     </div>
   );
 }

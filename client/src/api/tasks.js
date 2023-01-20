@@ -26,7 +26,7 @@ export async function createTask(title, description) {
 }
 
 export async function updateTask(taskId, title, description) {
-  const repsonse = await fetch(`/routes/tasks/${taskId}`, {
+  const repsonse = await fetch(`/routes/tasks/updating/${taskId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
