@@ -10,8 +10,8 @@ export async function singleTask(taskId) {
   return result;
 }
 
-export async function createTask() {
-  const response = await fetch("/routes/tasks", {
+export async function createTask(title, description) {
+  const response = await fetch("/routes/tasks/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export async function deleteTask(taskId) {
     headers: {
       "Content-Type": "application/json",
     },
-  });
-  const result = await response.json();
+  }); 
+  const result = await repsonse.json();
   return result;
 }

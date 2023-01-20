@@ -21,7 +21,7 @@ taskRouter.get("/tasks/:taskId", async (req, res, next) => {
   }
 });
 
-taskRouter.post("/tasks", async (req, res, next) => {
+taskRouter.post("/tasks/create", async (req, res, next) => {
   try {
     const { title, description } = req.body;
     const newTask = {
