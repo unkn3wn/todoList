@@ -1,17 +1,21 @@
+const { client } = require("./client");
+
+const { testTask } = require("./seedData");
+
 const {
-  client,
   getAllTask,
+  getSingleTask,
   createTask,
   updateTask,
   deleteTask,
-} = require("./index");
+} = require("../db/adapters/tasks");
 
 async function dropTables() {
   try {
     console.log("start of dropping tables...");
     await client.query(`
-        DROP TABLE IF EXISTS tasks
-        `);
+          DROP TABLE IF EXISTS tasks
+          `);
     console.log("done dropping tables");
   } catch (error) {
     console.error("error in dropping tables");
@@ -23,80 +27,63 @@ async function createTables() {
   try {
     console.log("start of building tables");
     await client.query(`
-    CREATE TABLE tasks(
-        id SERIAL PRIMARY KEY,
-        title VARCHAR(255) UNIQUE,
-        description VARCHAR(255)
-      );
-    
-    `);
+      CREATE TABLE tasks(
+          id SERIAL PRIMARY KEY,
+          title VARCHAR(255) UNIQUE,
+          description VARCHAR(255)
+        );
+      
+      `);
     console.log("finished building tables!..");
   } catch (error) {
     console.error("error building tables!");
     throw error;
   }
 }
-// create task funcion
-async function createInitialTask() {
-  try {
-    console.log("Start of making Task....");
-    const homework = await createTask({
-      title: "homework",
-      description: "lots of it",
-    });
-    const secondHomework = await createTask({
-      title: "moreHomework",
-      description: "more and more",
-    });
-    const thirdHomework = await createTask({
-      title: "moremoreHome",
-      description: "more and more and more",
-    });
 
-    console.log(homework, secondHomework, thirdHomework);
-    console.log("finished creating task");
-  } catch (error) {
-    console.error("error creating task");
-    throw error;
+//////seed all the task
+
+const seedTask = async () => {
+  console.log("start of seeding task");
+  // CREATING TASK
+  console.log("creating task...");
+  for (const createdTask of testTask) {
+    await createTask(createdTask);
   }
-}
+  console.log("done creating task..");
+  //  GETTING SINGLE TASK
+  console.log("getting single task...");
+  const singleTask = await getSingleTask(2);
+  console.log("result:", singleTask);
+  // GETTING ALL TASK
+  console.log("start of getting all task...");
+  const allTask = await getAllTask();
+  console.log("finished getting alll task: ", allTask);
+  //   UPDATING A TASK
+  console.log("Start of updating a task....");
+  const updatedTask = await updateTask(1,{
+    title:"UpdatedMonday", 
+    description:"yay it works"
+  });
+  console.log("result: ",updatedTask);
+//   DELETING A TASK
+  console.log("start of deleting task");
+  const deletedTask = await deleteTask(5);
+  console.log("Result:", deletedTask);
+};
+
 async function rebuildDB() {
   try {
     client.connect();
     await dropTables();
     await createTables();
-    await createInitialTask();
+    await seedTask();
   } catch (error) {
     console.error(error);
     throw error;
+  } finally {
+    client.end();
   }
 }
 
-async function testDB() {
-  try {
-    console.log("start of testing db");
-    const task = await getAllTask();
-    console.log("task: ", task);
-
-    console.log("updating tasks on task [0]");
-    const updateTaskResult = await updateTask([1], {
-      title: "fernando",
-      description: "reyes",
-    });
-    console.log("result", updateTaskResult);
-
-    console.log("start of deleting a task");
-    const destroyTask = await deleteTask([1]);
-    console.log("result:", destroyTask);
-
-    console.log("finished db test!");
-  } catch (error) {
-    console.error("Error testing database!");
-    throw error;
-  }
-}
-
-rebuildDB()
-  .then(testDB)
-  .catch(console.error)
-  .finally(() => client.end());
+rebuildDB();
