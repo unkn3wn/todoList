@@ -50,13 +50,22 @@ taskRouter.patch("/tasks/:taskId", async (req, res, next) => {
   try {
     const singleTask = await Tasks.getSingleTask(taskId);
     console.log(singleTask);
-    if(singleTask){
+    if (singleTask) {
       const updatedTask = await Tasks.updateTask(taskId, updateFields);
       res.send({ task: updatedTask });
     }
-    
   } catch ({ title, description }) {
     next({ title, description });
+  }
+});
+
+taskRouter.delete("/tasks/:taskId", async (req, res, next) => {
+  const { taskId } = req.params;
+  try {
+    const deletedTask = await Tasks.deleteTask(taskId);
+    res.send(deletedTask);
+  } catch (error) {
+    throw error;
   }
 });
 
